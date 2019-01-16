@@ -9,7 +9,7 @@ odoo.define('web_button_action_and_close', function (require) {
         do_execute_action: function (action_data, dataset, record_id, on_closed) {
             var self = this;
             return this._super(action_data, dataset, record_id, on_closed).then(function () {
-                   if (action_data.hasOwnProperty("class") && action_data.class.includes('o_action_and_close')) {
+                   if (action_data.class && action_data.class.includes('o_action_and_close')) {
                         return self.do_action({"type":"ir.actions.act_window_close"});
                    }
             });
