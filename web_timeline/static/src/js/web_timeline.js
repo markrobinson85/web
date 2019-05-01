@@ -441,12 +441,16 @@ odoo.define('web_timeline.TimelineView', function (require) {
         on_remove: function(item, callback) {
             var self = this;
             function do_it() {
-                return $.when(self.dataset.unlink([item.evt.id])).then(function() {
-                    callback(item);
-                });
+                // Unset the gantt values instead of unlink, to remove task from timeline but keep in kanban.
+                var data = {};
+                data[self.fields_view.arch.attrs.date_start] = false;
+                data[self.fields_view.arch.attrs.date_stop] = false;
+                var id = item.evt.id;
+                self.dataset.write(id, data);
+                callback(item);
             }
             if (this.options.confirm_on_delete) {
-                if (confirm(_t("Are you sure you want to delete this record ?"))) {
+                if (confirm(_t("Are you sure you want to remove this task from the schedule?"))) {
                     return do_it();
                 }
             } else
